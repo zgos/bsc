@@ -18,6 +18,7 @@ const (
 func (p *Parlia) delayForRamanujanFork(snap *Snapshot, header *types.Header) time.Duration {
 	delay := time.Unix(int64(header.Time), 0).Sub(time.Now()) // nolint: gosimple
 	if p.chainConfig.IsRamanujan(header.Number) {
+		log.Info("=== debug RamanujanBlock", "forkheight", p.chainConfig.RamanujanBlock, "current", header.Number)
 		log.Info("=== debug delayForRamanujanFork")
 		return delay
 	} else {
