@@ -635,11 +635,11 @@ func (p *Parlia) Prepare(chain consensus.ChainReader, header *types.Header) erro
 		return consensus.ErrUnknownAncestor
 	}
 	header.Time = p.blockTimeForRamanujanFork(snap, header, parent)
-	log.Info("==debug prepare", "headerTime", header.Time, "height", "diff", header.Difficulty)
+	log.Info("=== debug prepare", "headerTime", header.Time, "height", header.Number, "diff", header.Difficulty)
 	if header.Time < uint64(time.Now().Unix()) {
 		header.Time = uint64(time.Now().Unix())
 	}
-	log.Info("==debug prepare", "realheaderTime", header.Time, "diff", header.Difficulty)
+	log.Info("=== debug prepare", "realheaderTime", header.Time, "diff", header.Difficulty)
 	return nil
 }
 
