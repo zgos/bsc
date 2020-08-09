@@ -22,6 +22,7 @@ func (p *Parlia) delayForRamanujanFork(snap *Snapshot, header *types.Header) tim
 		log.Info("=== debug delayForRamanujanFork")
 		return delay
 	} else {
+		log.Info("=== debug RamanujanBlock", "forkheight", p.chainConfig.RamanujanBlock, "current", header.Number)
 		log.Info("=== debug not delayForRamanujanFork")
 	}
 	wiggle := time.Duration(len(snap.Validators)/2+1) * wiggleTimeBeforeFork
