@@ -284,7 +284,14 @@ func (p *Parlia) Author(header *types.Header) (common.Address, error) {
 
 // VerifyHeader checks whether a header conforms to the consensus rules.
 func (p *Parlia) VerifyHeader(chain consensus.ChainReader, header *types.Header, seal bool) error {
-	return p.verifyHeader(chain, header, nil)
+	err := p.verifyHeader(chain, header, nil)
+	if err != nil {
+		log.Info("=== verify header fail", "err", err, "height", header.Number, "haedertime", header.Time, "time", time.Now(), "diff", header.Difficulty)
+	} else {
+		log.Info("=== verify header success", "height", header.Number, "haedertime", header.Time, "time", time.Now(), "diff", header.Difficulty)
+
+	}
+	return err
 }
 
 // VerifyHeaders is similar to VerifyHeader, but verifies a batch of headers. The
@@ -628,9 +635,11 @@ func (p *Parlia) Prepare(chain consensus.ChainReader, header *types.Header) erro
 		return consensus.ErrUnknownAncestor
 	}
 	header.Time = p.blockTimeForRamanujanFork(snap, header, parent)
+	log.Info("==debug prepare", "headerTime", header.Time, "height", "diff", header.Difficulty)
 	if header.Time < uint64(time.Now().Unix()) {
 		header.Time = uint64(time.Now().Unix())
 	}
+	log.Info("==debug prepare", "realheaderTime", header.Time, "diff", header.Difficulty)
 	return nil
 }
 
@@ -811,7 +820,7 @@ func (p *Parlia) Seal(chain consensus.ChainReader, block *types.Block, results c
 	// Sweet, the protocol permits us to sign the block, wait for our time
 	delay := p.delayForRamanujanFork(snap, header)
 
-	log.Info("Sealing block with", "number", number, "delay", delay, "headerDifficulty", header.Difficulty, "val", val.Hex())
+	log.Info("====Sealing block with", "number", number, "delay", delay, "headerDifficulty", header.Difficulty, "val", val.Hex(), "now", time.Now(), "headertime", header.Time)
 
 	// Sign all the things!
 	sig, err := signFn(accounts.Account{Address: val}, accounts.MimetypeParlia, ParliaRLP(header, p.chainConfig.ChainID))

@@ -4,6 +4,8 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/ethereum/go-ethereum/log"
+
 	"github.com/ethereum/go-ethereum/consensus"
 	"github.com/ethereum/go-ethereum/core/types"
 )
@@ -25,6 +27,7 @@ func (p *Parlia) delayForRamanujanFork(snap *Snapshot, header *types.Header) tim
 func (p *Parlia) blockTimeForRamanujanFork(snap *Snapshot, header, parent *types.Header) uint64 {
 	blockTime := parent.Time + p.config.Period
 	if p.chainConfig.IsRamanujan(header.Number) {
+		log.Info("==debug prepare blockTimeForRamanujanFork", "headerTime", header.Time, "height", "diff", header.Difficulty, "backoff", backOffTime(snap, p.val))
 		blockTime = blockTime + backOffTime(snap, p.val)
 	}
 	return blockTime
