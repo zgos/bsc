@@ -161,11 +161,11 @@ func (s *Snapshot) apply(headers []*types.Header, chain consensus.ChainReader, p
 		if _, ok := snap.Validators[validator]; !ok {
 			return nil, errUnauthorizedValidator
 		}
-		for _, recent := range snap.Recents {
-			if recent == validator {
-				return nil, errRecentlySigned
-			}
-		}
+		//for _, recent := range snap.Recents {
+		//	if recent == validator {
+		//		return nil, errRecentlySigned
+		//	}
+		//}
 		snap.Recents[number] = validator
 		// change validator set
 		if number > 0 && number%s.config.Epoch == uint64(len(snap.Validators)/2) {
